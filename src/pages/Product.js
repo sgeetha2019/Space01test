@@ -11,22 +11,25 @@ const columns = [
     dataIndex: "name",
     key: "name",
     sorter: (a, b) => a.name.localeCompare(b.name),
-    style: { backgroundColor: "#ADD8E6" }
+    render: (name => <div data-testid={`test-${name}`}> {name} </div>)
   },
   {
     title: "Price",
     dataIndex: "price",
     key: "price",
+    render: ((price, record, index) => <div data-testid={`test-${index}`}> {price} </div>)
   },
 ];
 const items = [
   {
     label: "Cheapest Five Items",
     key: 'cheapest',
+    'data-testid': 'cheapest'
   },
   {
     label: "All Items",
     key: 'all',
+    'data-testid': 'all'
   },
 ];
 
@@ -83,7 +86,6 @@ const Product = () => {
       }}
       bodyStyle={{
         padding: '40px',
-        // padding: 0,
         border: '1px solid #a8c6fa',
         borderBottomRightRadius: '10px',
         borderBottomLeftRadius: '10px',
@@ -91,18 +93,17 @@ const Product = () => {
       extra={
         <div>
           <Dropdown menu={menuProps}>
-            <Button style={{ position: 'absolute', top: '21px', left: '21px' }}>
+            <Button data-testid='button' style={{ position: 'absolute', top: '21px', left: '21px' }}>
               <Space>
                 {viewType === "cheapest" ? "Cheapest Five Items" : "All Items"}
                 <CaretDownOutlined />
               </Space>
             </Button>
           </Dropdown>
-
           <Input
+            data-testid='search-input'
             placeholder="Filter by name"
             style={{ width: 200, margin: "10px 0" }}
-            // style={{ width: "300px", margin: "10px 0" }}
             onChange={handleFilterChange}
           />
         </div>
@@ -110,6 +111,7 @@ const Product = () => {
     >
       <div>
         <Table
+          rowKey={record => record.name}
           dataSource={filteredData}
           columns={columns}
           bordered
